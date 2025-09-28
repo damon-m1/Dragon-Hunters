@@ -1,2 +1,2 @@
-Most assets I didn't create myself has been credited with a .txt file of the same name of the file used.
+Most assets I didn't create myself have been credited with a .txt file of the same name of the file used.
 Some files have credits in the file itself. Right click a file, click "Properties" and click the "Details" tab for more information.
