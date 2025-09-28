@@ -8,16 +8,11 @@ Interact/Use - X
 Run/Back - Z
 Pause - Return/Enter
 
-CREDITS (Discord):
-Upper rank 2 (the_king0303_39317) - Story writer
-Damon (damon_m_) - Programmer, game mechanic designer (is that even a thing???), tile and overworld sprite artist, potential future composer, the author of what you're reading right now
-For additional credits for assets, please check the assets folder.
+For credits for assets, please check the assets folder.
 
 This game was written in Python 1.13.5.
 
 No AI was used in the making of this game.
-
-Feel free to ask me on the Discord for the source code!
 
 - Damon :)
 
