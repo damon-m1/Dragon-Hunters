@@ -1,5 +1,5 @@
 # This is one of my first Pygame games, so sorry if it isn't coded that well
-# Written in Python 3.13.1 / 1.13.3
+# Written in Python 3.13.5
 
 # To build this, you need to use cx_freeze. Run 'pip install cx_freeze' and run build.bat to build.
 # Certain modules are required to run and build this. Run setup.bat to install them.
@@ -569,7 +569,11 @@ def load_group_of_assets(table,loading_photo=None,text_color="white"):
         loaded += 1
         render_loading_screen(loading_photo,hint,loaded,length,text_color)
 
+def render_battle():
+    pass
+
 def begin_battle(battle_file):
+    music.stop()
     encounter_sound = pygame.mixer.Sound("assets/audio/other/encounter.wav")
     encounter_sound.play()
     i = 0
@@ -585,6 +589,10 @@ def begin_battle(battle_file):
     battle_file = open(f"data/battles/{battle_file}")
     battle_data = json.load(battle_file)
     battle_file.close()
+    while True:
+        handle_events()
+        pygame.display.flip()
+        clock.tick(60)
 
 def title_screen():
     global logo
@@ -663,6 +671,8 @@ noclip = False
 while running: # Main loop
     handle_events()
 
+    try_battle = False
+
     black_screen = pygame.surface.Surface((screen_width,screen_height))
     black_screen.fill("black")
 
@@ -696,7 +706,7 @@ while running: # Main loop
         pause_music = pygame.mixer.Sound("assets/audio/music/pause.wav")
         pause_music.play(-1)
         paused_text = font.render("PAUSED",False,"white")
-        pause_options = ["Resume","Controls","Toggle debug","Widescreen (experimental)","4:3 (original)","README.txt","itch.io page","Discord server","Quit game"]
+        pause_options = ["Resume","Controls","Toggle debug","Widescreen (experimental)","4:3 (original)","Try battle","README.txt","itch.io page","Discord server","Quit game"]
         selected_option = 0
         exit_pause = False
         frame_number = 0
@@ -781,6 +791,9 @@ while running: # Main loop
                             pygame.display.flip()
                             time.sleep(0.01)
                         pygame.display.set_caption("Dragon Hunters")
+                if option_selected == "Try battle":
+                    exit_pause = True
+                    try_battle = True
                 if option_selected == "Controls":
                     in_controls = True
                     exit_controls = False
@@ -952,10 +965,13 @@ while running: # Main loop
                 # print(f'Tile {mouse_position} clicked')
                 set_tile(tile_mouse_pos,selected_tile)
     # Rendering
+    if try_battle:
+        begin_battle("0.json")
     render()
+    screen.blit(font.render(f'FPS: {math.floor(clock.get_fps())}',False,'white'),(0,0))
     if debug:
-        screen.blit(font.render(f'Camera Pos: {camera_x},{camera_y}',False,'white'),(0,0))
-        screen.blit(font.render(f'Mouse Pos: {mouse_position[0]},{mouse_position[1]} ({tile_mouse_pos})',False,'white'),(0,30))
-        screen.blit(font.render(f'Memory usage: {math.floor(Process().memory_info().rss / 1024 / 1024)}MB',False,'white'),(0,60))
+        screen.blit(font.render(f'Camera Pos: {camera_x},{camera_y}',False,'white'),(0,30))
+        screen.blit(font.render(f'Mouse Pos: {mouse_position[0]},{mouse_position[1]} ({tile_mouse_pos})',False,'white'),(0,60))
+        screen.blit(font.render(f'Memory usage: {math.floor(Process().memory_info().rss / 1024 / 1024)}MB',False,'white'),(0,90))
     pygame.display.flip()
     clock.tick(60)
