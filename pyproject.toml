@@ -1,0 +1,12 @@
+[project]
+name = "dragon-hunters"
+version = "0.6.2a"
+description = "A game written in Pygame"
+
+[tool.cxfreeze]
+executables = [
+    {script = "dragon_hunters.py", base = "gui"}
+]
+
+[tool.cxfreeze.build_exe]
+include_files = ["assets","data","README.txt","version.txt","changelog.txt","save_data"]

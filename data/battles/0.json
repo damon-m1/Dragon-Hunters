@@ -1,0 +1,10 @@
+{
+    "enemies":[
+        {
+            "display_name":"Test",
+            "name":"test",
+            "attack":10,
+            "defense":10
+        }
+    ]
+}
