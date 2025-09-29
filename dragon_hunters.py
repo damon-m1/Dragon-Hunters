@@ -129,6 +129,7 @@ audio = {}
 single_keys = {}
 level_values = {}
 active_keys = {}
+unlocked_framerate = False
 framerate = 60
 player_data = None
 show_dialog = False
@@ -755,7 +756,7 @@ while running: # Main loop
         pause_music = pygame.mixer.Sound("assets/audio/music/pause.wav")
         pause_music.play(-1)
         paused_text = font.render("PAUSED",False,"white")
-        pause_options = ["Resume","Controls","Toggle debug","Widescreen (experimental)","4:3 (original)","Try battle","README.txt","Asset credits","itch.io page","Discord server","Quit game"]
+        pause_options = ["Resume","Controls","Toggle debug","Widescreen (experimental)","4:3 (original)","Toggle FPS unlock","Try battle","README.txt","Asset credits","itch.io page","Discord server","Quit game"]
         selected_option = 0
         exit_pause = False
         frame_number = 0
@@ -813,6 +814,8 @@ while running: # Main loop
                             pygame.display.flip()
                             time.sleep(0.01)
                         pygame.display.set_caption("Dragon Hunters")
+                if option_selected == "Toggle FPS unlock":
+                    unlocked_framerate = not unlocked_framerate
                 if option_selected == "Try battle":
                     exit_pause = True
                     try_battle = True
@@ -998,4 +1001,7 @@ while running: # Main loop
         screen.blit(font.render(f'Mouse Pos: {mouse_position[0]},{mouse_position[1]} ({tile_mouse_pos})',False,'white'),(0,60))
         screen.blit(font.render(f'Memory usage: {math.floor(Process().memory_info().rss / 1024 / 1024)}MB',False,'white'),(0,90))
     pygame.display.flip()
-    clock.tick(framerate)
+    if unlocked_framerate:
+        clock.tick()
+    else:
+        clock.tick(framerate)
