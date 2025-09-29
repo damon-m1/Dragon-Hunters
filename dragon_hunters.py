@@ -743,7 +743,7 @@ while running: # Main loop
         pause_music = pygame.mixer.Sound("assets/audio/music/pause.wav")
         pause_music.play(-1)
         paused_text = font.render("PAUSED",False,"white")
-        pause_options = ["Resume","Controls","Toggle debug","Widescreen (experimental)","4:3 (original)","Try battle","README.txt","itch.io page","Discord server","Quit game"]
+        pause_options = ["Resume","Controls","Toggle debug","Widescreen (experimental)","4:3 (original)","Try battle","README.txt","Asset credits","itch.io page","Discord server","Quit game"]
         selected_option = 0
         exit_pause = False
         frame_number = 0
@@ -767,6 +767,8 @@ while running: # Main loop
                 option_selected = pause_options[selected_option]
                 if option_selected == "Resume":
                     exit_pause = True
+                if option_selected == "Asset credits":
+                    read_text("assets/credits.txt")
                 if option_selected == "README.txt":
                     read_text("README.txt")
                 if option_selected == "itch.io page":
