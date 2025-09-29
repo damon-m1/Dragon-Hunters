@@ -21,12 +21,6 @@ P.S Press Q and E together at the "Pygame Powered" logo for debug mode (works be
 Oh, by the way, if you're reading this from the game,
 use arrows to scroll.
 
-=== Update for Version a0.6.2 ===
-
-I apologise for not publishing any updates for the last two months. I've been trying to learn more Pygame to make the game run smoother eventually.
-I've also been trying to learn how to use tools like Git for when I make the game open-source.
-The next update I'm going to try to get a lot more done and optimise the code.
-
 === Porting to Linux ===
 
 Yeah I've already tried this on Linux Mint but cx_Freeze won't include Pygame in the build.
