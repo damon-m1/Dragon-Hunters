@@ -592,6 +592,40 @@ def begin_battle(battle_file):
         pygame.display.flip()
         clock.tick(60)
 
+def read_text(filename):
+    black_screen.set_alpha(200)
+    readme_file = open(filename)
+    readme = readme_file.readlines()
+    readme_file.close()
+    scroll_x = 0
+    scroll_y = 0
+    handle_events()
+    while not (single_keys["b"] or single_keys["start"]):
+        handle_events()
+        render()
+        screen.blit(black_screen,(0,0))
+        draw_y = 0
+        if active_keys["right"]:
+            scroll_x += 3
+        elif active_keys["left"]:
+            scroll_x -= 3
+            if scroll_x <= 0:
+                scroll_x = 0
+        if active_keys["down"]:
+            scroll_y += 3
+            text_height = (len(readme) * 16) - screen_height
+            if scroll_y >= text_height:
+                scroll_y = text_height
+        elif active_keys["up"]:
+            scroll_y -= 3
+            if scroll_y <= 0:
+                scroll_y = 0
+        for line in readme:
+            screen.blit(smaller_font.render(line,False,"white"),(0 - scroll_x,draw_y - scroll_y))
+            draw_y += 16
+        pygame.display.flip()
+        clock.tick(60)
+
 def title_screen():
     global logo
     logo = pygame.image.load("assets/other/logo.png")
@@ -666,6 +700,11 @@ player_direction = 'front'
 
 noclip = False
 
+black_screen = pygame.surface.Surface((screen_width,screen_height))
+black_screen.fill("black")
+
+read_text("README.txt")
+
 while running: # Main loop
     handle_events()
 
@@ -729,36 +768,7 @@ while running: # Main loop
                 if option_selected == "Resume":
                     exit_pause = True
                 if option_selected == "README.txt":
-                    readme_file = open("README.txt")
-                    readme = readme_file.readlines()
-                    readme_file.close()
-                    scroll_x = 0
-                    scroll_y = 0
-                    while single_keys["b"] == False:
-                        handle_events()
-                        render()
-                        screen.blit(black_screen,(0,0))
-                        draw_y = 0
-                        if active_keys["right"]:
-                            scroll_x += 3
-                        elif active_keys["left"]:
-                            scroll_x -= 3
-                            if scroll_x <= 0:
-                                scroll_x = 0
-                        if active_keys["down"]:
-                            scroll_y += 3
-                            text_height = (len(readme) * 16) - screen_height
-                            if scroll_y >= text_height:
-                                scroll_y = text_height
-                        elif active_keys["up"]:
-                            scroll_y -= 3
-                            if scroll_y <= 0:
-                                scroll_y = 0
-                        for line in readme:
-                            screen.blit(smaller_font.render(line,False,"white"),(0 - scroll_x,draw_y - scroll_y))
-                            draw_y += 16
-                        pygame.display.flip()
-                        clock.tick(60)
+                    read_text("README.txt")
                 if option_selected == "itch.io page":
                     os.startfile("https://damon-m1.itch.io/dragon-hunters")
                 if option_selected == "Discord server":
