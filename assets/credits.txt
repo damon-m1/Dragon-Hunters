@@ -1,2 +1,11 @@
-Most assets I didn't create myself have been credited with a .txt file of the same name of the file used.
-Some files have credits in the file itself. Right click a file, click "Properties" and click the "Details" tab for more information.
+=== CREDITS FOR ASSETS ===
+
+=== FONTS ===
+Pixelated Elegance Font (font.ttf) - https://www.fontspace.com/pixelated-elegance-font-f126145
+Google Sans Code (debug.ttf) - https://fonts.google.com/specimen/Google+Sans+Code
+Noto Serif - https://fonts.google.com/noto/specimen/Noto+Serif
+
+=== AUDIO ===
+UK Double Hat Pattern - 140bpm by MCKSingh -- https://freesound.org/s/816503/ -- License: Creative Commons 0
+groovy loop by jjwoosh -- https://freesound.org/s/803731/ -- License: Creative Commons 0
+Water Running Stream.wav by Motion_S -- https://freesound.org/s/221760/ -- License: Attribution 4.0
