@@ -129,6 +129,7 @@ audio = {}
 single_keys = {}
 level_values = {}
 active_keys = {}
+framerate = 60
 player_data = None
 show_dialog = False
 controls_enabled = True
@@ -156,8 +157,8 @@ class player_class():
     def load_assets(self):
         load_object_images(self.spritelist)
     def move(self, by):
-        by_x = by[0]
-        by_y = by[1]
+        by_x = fps_correct(by[0])
+        by_y = fps_correct(by[1])
         if by_x > 0:
             self.direction = 0
         elif by_x < 0:
@@ -193,13 +194,13 @@ class player_class():
                 self.move((0,player_speed))
                 self.moved = True
             if self.moved:
-                self.animation_frame += player_speed * self.animation_speed
+                self.animation_frame += fps_correct(player_speed * self.animation_speed)
             else:
                 self.animation_frame = 0
             target_camera_x = (self.x - (((screen_width - 640) / 640) + 1) * 306) - camera_x # 306
             target_camera_y = (self.y - (((screen_height - 480) / 640) + 1) * 226) - camera_y
-            camera_x += (target_camera_x / camera_smoothness)
-            camera_y += (target_camera_y / camera_smoothness)
+            camera_x += fps_correct(target_camera_x / camera_smoothness)
+            camera_y += fps_correct(target_camera_y / camera_smoothness)
             static_level = level_values.get("static")
             if static_level:
                 if bool(static_level):
@@ -648,6 +649,16 @@ debug = False
 pg_logo = pygame.image.load("assets/other/pygame_powered.png")
 
 clock = pygame.time.Clock()
+
+def fps_correct(number,original_framerate=60,new_framerate=None):
+    '''Adjusts numbers (example: walking speed) for a different framerate'''
+    if not new_framerate:
+        new_framerate = clock.get_fps()
+    try:
+        return number * (original_framerate / new_framerate)
+    except:
+        return number
+
 screen = pygame.display.set_mode((screen_width,screen_height)) # Resolution: 480p 4:3
 fullscreen = False
 pygame.display.set_caption("Dragon Hunters")
@@ -963,6 +974,8 @@ while running: # Main loop
             resolution_input = input("Enter the resolution to change to (format: 'x,y'): ")
             split_resolution = resolution_input.split(",")
             pygame.display.set_mode((int(split_resolution[0]),int(split_resolution[1])))
+        if command == "CHANGE FRAMERATE":
+            framerate = int(input("Framerate: "))
         # Mouse controls
         mouse_position = pygame.mouse.get_pos()
         mouse_position = list(mouse_position)
@@ -984,4 +997,4 @@ while running: # Main loop
         screen.blit(font.render(f'Mouse Pos: {mouse_position[0]},{mouse_position[1]} ({tile_mouse_pos})',False,'white'),(0,60))
         screen.blit(font.render(f'Memory usage: {math.floor(Process().memory_info().rss / 1024 / 1024)}MB',False,'white'),(0,90))
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(framerate)
