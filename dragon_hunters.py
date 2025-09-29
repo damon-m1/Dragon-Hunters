@@ -612,15 +612,16 @@ def read_text(filename):
             scroll_x -= 3
             if scroll_x <= 0:
                 scroll_x = 0
-        if active_keys["down"]:
-            scroll_y += 3
-            text_height = (len(readme) * 16) - screen_height
-            if scroll_y >= text_height:
-                scroll_y = text_height
-        elif active_keys["up"]:
-            scroll_y -= 3
-            if scroll_y <= 0:
-                scroll_y = 0
+        text_height = (len(readme) * 16)
+        if text_height > screen_height:
+            if active_keys["down"]:
+                scroll_y += 3
+                if scroll_y >= text_height - screen_height:
+                    scroll_y = text_height - screen_height
+            elif active_keys["up"]:
+                scroll_y -= 3
+                if scroll_y <= 0:
+                    scroll_y = 0
         for line in readme:
             screen.blit(smaller_font.render(line,False,"white"),(0 - scroll_x,draw_y - scroll_y))
             draw_y += 16
