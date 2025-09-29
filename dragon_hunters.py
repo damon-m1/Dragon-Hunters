@@ -37,7 +37,7 @@ pygame.mixer.init()
 
 font = FontManager().get_font("font.ttf",32)
 smaller_font = font_manager.get_font("font.ttf",16)
-debug_font = pygame.font.Font('assets/fonts/debug.TTF',16)
+debug_font = pygame.font.Font('assets/fonts/debug.ttf',16)
 working_text = font.render('Working...',False,'white')
 
 # Loading other stuff
