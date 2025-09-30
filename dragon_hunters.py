@@ -629,6 +629,40 @@ def read_text(filename):
         pygame.display.flip()
         clock.tick(60)
 
+class Menu:
+    '''Menu class for pause menus, settings menus, etc.'''
+    def __init__(self,choices:list,font_manager:FontManager,font="font.ttf",text_size=32,offset=0):
+        self.selected = 0
+        self.scroll_y = offset
+        self.choices = choices
+        self.font_manager = font_manager
+        self.font = font
+        self.text_size = text_size
+    def manage_controls(self):
+        '''If an option is selected, returns the option number. Otherwise returns None.'''
+        if single_keys["down"]:
+            self.selected += 1
+            if self.selected > len(self.choices) - 1:
+                self.selected -= 1
+        elif single_keys["up"]:
+            self.selected -= 1
+            if self.selected < 0:
+                self.selected += 1
+        if single_keys["start"] or single_keys["a"]:
+            return self.selected
+        return None
+    def render(self):
+        draw_y = self.scroll_y
+        i = 0
+        for choice in self.choices:
+            if self.selected == i:
+                text_color = "yellow"
+            else:
+                text_color = "white"
+            i += 1
+            screen.blit(self.font_manager.get_font(self.font,self.text_size).render(choice,False,text_color),(0,draw_y))
+            draw_y += self.text_size
+
 def title_screen():
     global logo
     logo = pygame.image.load("assets/other/logo.png")
@@ -757,7 +791,8 @@ while running: # Main loop
         pause_music.play(-1)
         paused_text = font.render("PAUSED",False,"white")
         pause_options = ["Resume","Controls","Toggle debug","Widescreen (experimental)","4:3 (original)","Toggle FPS unlock","Try battle","README.txt","Asset credits","itch.io page","Discord server","Quit game"]
-        selected_option = 0
+        pause_menu = Menu(pause_options,font_manager,offset=60)
+        selected_option = None
         exit_pause = False
         frame_number = 0
         hint = random.choice(loading_hints)
@@ -768,15 +803,7 @@ while running: # Main loop
                 hint = random.choice(loading_hints)
             handle_events()
             render()
-            if single_keys["up"]:
-                selected_option -= 1
-                if selected_option == -1:
-                    selected_option = len(pause_options) - 1
-            elif single_keys["down"]:
-                selected_option += 1
-                if selected_option == len(pause_options):
-                    selected_option = 0
-            if single_keys["a"]:
+            if selected_option != None:
                 option_selected = pause_options[selected_option]
                 if option_selected == "Resume":
                     exit_pause = True
@@ -874,14 +901,18 @@ while running: # Main loop
             screen.blit(ver_text,(screen_width - ver_text_size[0],0))
             draw_y = 60
             i = 0
-            for option in pause_options:
+            '''for option in pause_options:
                 if i == selected_option:
                     text_color = "yellow"
                 else:
                     text_color = "white"
                 screen.blit(font.render(option,False,text_color),(0,draw_y))
                 draw_y += 30
-                i += 1
+                i += 1'''
+            selected_option = pause_menu.manage_controls()
+            if selected_option != None:
+                selected_option = selected_option
+            pause_menu.render()
             pygame.display.flip()
             clock.tick(60)
         pause_music.stop()
