@@ -822,24 +822,28 @@ while running: # Main loop
                 if option_selected == "Widescreen (experimental)":
                     if screen_width == 640:
                         screen_width = 640
-                        while screen_width != 854:
-                            pygame.display.set_caption("Woah! Check out this AMAZING window effect!!!")
-                            screen_width += 1
-                            pygame.display.set_mode((screen_width,480))
-                            handle_events()
-                            pygame.display.flip()
-                            time.sleep(0.01)
+                        if os.name == "nt": # when i tried this on linux mint the window was shaking but it works fine on windows so limiting the animation to windows only
+                            while screen_width != 854:
+                                pygame.display.set_caption("Woah! Check out this AMAZING window effect!!!")
+                                screen_width += 1
+                                pygame.display.set_mode((screen_width,480))
+                                handle_events()
+                                pygame.display.flip()
+                                time.sleep(0.01)
+                        pygame.display.set_mode((854,480))
                         pygame.display.set_caption("Dragon Hunters (widescreen)")
                 if option_selected == "4:3 (original)":
                     if screen_width == 854:
                         screen_width = 854
-                        while screen_width != 640:
-                            pygame.display.set_caption("goodbye widescreen :(")
-                            screen_width -= 1
-                            pygame.display.set_mode((screen_width,480))
-                            handle_events()
-                            pygame.display.flip()
-                            time.sleep(0.01)
+                        if os.name == "nt":
+                            while screen_width != 640:
+                                pygame.display.set_caption("goodbye widescreen :(")
+                                screen_width -= 1
+                                pygame.display.set_mode((screen_width,480))
+                                handle_events()
+                                pygame.display.flip()
+                                time.sleep(0.01)
+                        pygame.display.set_mode((640,480))
                         pygame.display.set_caption("Dragon Hunters")
                 if option_selected == "Toggle FPS unlock":
                     unlocked_framerate = not unlocked_framerate
