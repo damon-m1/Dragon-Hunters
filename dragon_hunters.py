@@ -638,6 +638,7 @@ class Menu:
         self.font_manager = font_manager
         self.font = font
         self.text_size = text_size
+        self.has_selected = False
     def manage_controls(self):
         '''If an option is selected, returns the option number. Otherwise returns None.'''
         if single_keys["down"]:
@@ -649,7 +650,9 @@ class Menu:
             if self.selected < 0:
                 self.selected += 1
         if single_keys["start"] or single_keys["a"]:
-            return self.selected
+            self.has_selected = True
+        else:
+            self.has_selected = False
         return None
     def render(self):
         draw_y = self.scroll_y
@@ -803,8 +806,8 @@ while running: # Main loop
                 hint = random.choice(loading_hints)
             handle_events()
             render()
-            if selected_option != None:
-                option_selected = pause_options[selected_option]
+            option_selected = selected_option
+            if pause_menu.has_selected:
                 if option_selected == "Resume":
                     exit_pause = True
                 if option_selected == "Asset credits":
@@ -913,9 +916,9 @@ while running: # Main loop
                 screen.blit(font.render(option,False,text_color),(0,draw_y))
                 draw_y += 30
                 i += 1'''
-            selected_option = pause_menu.manage_controls()
-            if selected_option != None:
-                selected_option = selected_option
+            pause_menu.manage_controls()
+            if pause_menu.has_selected:
+                selected_option = pause_options[pause_menu.selected]
             pause_menu.render()
             pygame.display.flip()
             clock.tick(60)
