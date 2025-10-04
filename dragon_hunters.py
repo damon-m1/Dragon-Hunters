@@ -136,6 +136,8 @@ show_dialog = False
 controls_enabled = True
 music = None
 in_controls = False
+show_fps = False
+widescreen = False
 
 # Classes
 
@@ -793,7 +795,7 @@ while running: # Main loop
         pause_music = pygame.mixer.Sound("assets/audio/music/pause.wav")
         pause_music.play(-1)
         paused_text = font.render("PAUSED",False,"white")
-        pause_options = ["Resume","Controls","Toggle debug","Widescreen (experimental)","4:3 (original)","Toggle FPS unlock","Try battle","README.txt","Asset credits","itch.io page","Discord server","Quit game"]
+        pause_options = ["Resume","Controls","Video settings","Toggle debug","Try battle","README.txt","Asset credits","itch.io page","Discord server","Quit game"]
         pause_menu = Menu(pause_options,font_manager,offset=60)
         selected_option = None
         exit_pause = False
@@ -810,6 +812,71 @@ while running: # Main loop
             if pause_menu.has_selected:
                 if option_selected == "Resume":
                     exit_pause = True
+                if option_selected == "Video settings":
+                    video_menu = Menu(["Limit FPS","Show FPS","Widescreen","Back"],font_manager)
+                    handle_events()
+                    while not (video_menu.choices[video_menu.selected] == "Back" and video_menu.has_selected): # video settings loop
+                        print(video_menu.has_selected)
+                        handle_events()
+                        render()
+                        screen.blit(pygame.transform.scale(black_screen,(screen_width,screen_height)),(0,0))
+                        video_menu.choices[0] = f"Limit FPS: {framerate}"
+                        video_menu.choices[1] = f"Show FPS: {show_fps}"
+                        video_menu.choices[2] = f"Widescreen: {widescreen}"
+                        if video_menu.selected == 0:
+                            if single_keys["left"]:
+                                if framerate == "Unlocked":
+                                    framerate = 0
+                                framerate -= 10
+                                unlocked_framerate = False
+                            elif single_keys["right"]:
+                                if framerate == "Unlocked":
+                                    framerate = 0
+                                framerate += 10
+                                unlocked_framerate = False
+                            if not framerate == "Unlocked":
+                                if framerate <= 0:
+                                    framerate = "Unlocked"
+                                    unlocked_framerate = True
+                        if video_menu.selected == 2:
+                            if single_keys["right"]:
+                                widescreen = True
+                                if screen_width == 640:
+                                    screen_width = 640
+                                    if os.name == "nt": # when i tried this on linux mint the window was shaking but it works fine on windows so limiting the animation to windows only
+                                        while screen_width != 854:
+                                            pygame.display.set_caption("Woah! Check out this AMAZING window effect!!!")
+                                            screen_width += 1
+                                            pygame.display.set_mode((screen_width,480))
+                                            handle_events()
+                                            pygame.display.flip()
+                                            time.sleep(0.01)
+                                    pygame.display.set_mode((854,480))
+                                    pygame.display.set_caption("Dragon Hunters (widescreen)")
+                            elif single_keys["left"]:
+                                widescreen = False
+                                if screen_width == 854:
+                                    screen_width = 854
+                                    if os.name == "nt":
+                                        while screen_width != 640:
+                                            pygame.display.set_caption("goodbye widescreen :(")
+                                            screen_width -= 1
+                                            pygame.display.set_mode((screen_width,480))
+                                            handle_events()
+                                            pygame.display.flip()
+                                            time.sleep(0.01)
+                                    pygame.display.set_mode((640,480))
+                                    pygame.display.set_caption("Dragon Hunters")
+                        if video_menu.selected == 1:
+                            if single_keys["left"]:
+                                show_fps = False
+                            elif single_keys["right"]:
+                                show_fps = True
+                        video_menu.manage_controls()
+                        video_menu.render()
+                        pygame.display.flip()
+                        clock.tick(60)
+                    handle_events()
                 if option_selected == "Asset credits":
                     read_text("assets/credits.txt")
                 if option_selected == "README.txt":
@@ -821,33 +888,7 @@ while running: # Main loop
                 if option_selected == "Quit game":
                     exit()
                 if option_selected == "Toggle debug":
-                    debug = not debug
-                if option_selected == "Widescreen (experimental)":
-                    if screen_width == 640:
-                        screen_width = 640
-                        if os.name == "nt": # when i tried this on linux mint the window was shaking but it works fine on windows so limiting the animation to windows only
-                            while screen_width != 854:
-                                pygame.display.set_caption("Woah! Check out this AMAZING window effect!!!")
-                                screen_width += 1
-                                pygame.display.set_mode((screen_width,480))
-                                handle_events()
-                                pygame.display.flip()
-                                time.sleep(0.01)
-                        pygame.display.set_mode((854,480))
-                        pygame.display.set_caption("Dragon Hunters (widescreen)")
-                if option_selected == "4:3 (original)":
-                    if screen_width == 854:
-                        screen_width = 854
-                        if os.name == "nt":
-                            while screen_width != 640:
-                                pygame.display.set_caption("goodbye widescreen :(")
-                                screen_width -= 1
-                                pygame.display.set_mode((screen_width,480))
-                                handle_events()
-                                pygame.display.flip()
-                                time.sleep(0.01)
-                        pygame.display.set_mode((640,480))
-                        pygame.display.set_caption("Dragon Hunters")
+                    debug = not debug                  
                 if option_selected == "Toggle FPS unlock":
                     unlocked_framerate = not unlocked_framerate
                 if option_selected == "Try battle":
@@ -1033,7 +1074,8 @@ while running: # Main loop
     if try_battle:
         begin_battle("0.json")
     render()
-    screen.blit(font.render(f'FPS: {math.floor(clock.get_fps())}',False,'white'),(0,0))
+    if show_fps:
+        screen.blit(font.render(f'FPS: {math.floor(clock.get_fps())}',False,'white'),(0,0))
     if debug:
         screen.blit(font.render(f'Camera Pos: {camera_x},{camera_y}',False,'white'),(0,30))
         screen.blit(font.render(f'Mouse Pos: {mouse_position[0]},{mouse_position[1]} ({tile_mouse_pos})',False,'white'),(0,60))
