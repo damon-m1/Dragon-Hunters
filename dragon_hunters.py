@@ -904,7 +904,7 @@ while running: # Main loop
                                 if pygame.key.name(event.key) == "escape":
                                     exit_controls = True
                         render()
-                        screen.blit(black_screen,(0,0))
+                        screen.blit(pygame.transform.scale(black_screen,(screen_width,screen_height)),(0,0))
                         screen.blit(font.render("Press any key to change",False,"white"),(0,0))
                         screen.blit(font.render("Press ESC to go back",False,"white"),(0,30))
                         draw_y = 90
