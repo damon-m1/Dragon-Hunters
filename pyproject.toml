@@ -9,4 +9,4 @@ executables = [
 ]
 
 [tool.cxfreeze.build_exe]
-include_files = ["assets","data","README.txt","version.txt","changelog.txt","save_data"]
+include_files = ["assets","data","README.txt","version.txt","changelog.txt","save_data","LICENSE.txt"]
