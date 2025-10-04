@@ -607,7 +607,7 @@ def read_text(filename):
     while not (single_keys["b"] or single_keys["start"]):
         handle_events()
         render()
-        screen.blit(black_screen,(0,0))
+        screen.blit(pygame.transform.scale(black_screen,(screen_width,screen_height)),(0,0))
         draw_y = 0
         if active_keys["right"]:
             scroll_x += 3
@@ -816,7 +816,6 @@ while running: # Main loop
                     video_menu = Menu(["Limit FPS","Show FPS","Widescreen","Back"],font_manager)
                     handle_events()
                     while not (video_menu.choices[video_menu.selected] == "Back" and video_menu.has_selected): # video settings loop
-                        print(video_menu.has_selected)
                         handle_events()
                         render()
                         screen.blit(pygame.transform.scale(black_screen,(screen_width,screen_height)),(0,0))
